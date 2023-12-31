@@ -43,7 +43,7 @@ const (
 	PAGE_SIZE = 4096
 	ROW_SIZE = unsafe.Sizeof(Row{})
 	ROWS_PER_PAGE = int(PAGE_SIZE / ROW_SIZE)
-	TABLE_FULL_SIZE = int(PAGE_SIZE * TABLE_MAX_PAGES)
+	TABLE_FULL_SIZE = int(ROWS_PER_PAGE * TABLE_MAX_PAGES)
 ) 
 
 type Statement struct {
@@ -129,7 +129,7 @@ func prepareStatement(input string, statement *Statement) PrepareResult {
 			return PREPARE_SYNTAX_ERROR
 		}
 
-		if args != 3 {
+		if args < 3 {
 			return PREPARE_SYNTAX_ERROR
 		}
 
@@ -183,6 +183,17 @@ func executeStatement(Statement *Statement, table *Table) ExecuteResult {
 }
 
 func main() {
+
+	// added for batch testing
+	// pipePath := "mypipe"
+	// pipe, err := os.OpenFile(pipePath, os.O_RDONLY, os.ModeNamedPipe)
+	// if err != nil {
+	// 	fmt.Println("Error opening pipe:", err)
+	// 	return
+	// }
+	// defer pipe.Close()
+
+
 	table := create_Table()
 	reader := bufio.NewReader(os.Stdin)
 	
